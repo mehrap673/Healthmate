@@ -63,7 +63,7 @@ export default function Navigation({
   };
 
   const NavItems = ({ mobile = false }: { mobile?: boolean }) => (
-    <div className={`${mobile ? 'flex flex-col space-y-2' : 'hidden md:flex md:space-x-2'}`}>
+    <div className={`${mobile ? 'flex flex-col space-y-2' : 'hidden md:flex md:justify-between md:w-full md:px-4'}`}>
       {navigationItems.map((item) => {
         const Icon = item.icon;
         const isActive = activeItem === item.href;
@@ -73,7 +73,7 @@ export default function Navigation({
             key={item.href}
             variant={isActive ? "default" : "ghost"}
             size={mobile ? "default" : "sm"}
-            className={`${mobile ? 'justify-start w-full' : ''} ${isActive ? 'bg-primary text-primary-foreground' : ''}`}
+            className={`${mobile ? 'justify-start w-full' : 'flex-1 mx-1'} ${isActive ? 'bg-primary text-primary-foreground' : ''}`}
             onClick={() => handleNavigation(item.href)}
             data-testid={`nav-${item.label.toLowerCase()}`}
           >
@@ -88,9 +88,9 @@ export default function Navigation({
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-6 max-w-6xl">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-16 items-center justify-between w-full">
           {/* Logo */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 flex-shrink-0">
             <div className="flex items-center space-x-2">
               <div className="p-2 bg-primary/10 rounded-lg">
                 <Heart className="w-6 h-6 text-primary" />
@@ -100,10 +100,12 @@ export default function Navigation({
           </div>
 
           {/* Desktop Navigation */}
-          <NavItems />
+          <div className="flex-1 mx-8 max-w-4xl">
+            <NavItems />
+          </div>
 
           {/* User Menu and Mobile Nav */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 flex-shrink-0">
             {/* Theme Toggle */}
             <Button
               variant="ghost"

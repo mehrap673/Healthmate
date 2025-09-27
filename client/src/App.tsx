@@ -17,6 +17,8 @@ import HealthHistory from "@/components/HealthHistory";
 import UserProfile from "@/components/UserProfile";
 import AuthForms from "@/components/AuthForms";
 import NotFound from "@/pages/not-found";
+import Footer from "./components/footer";
+import TipsSection from "./components/TipsSection";
 
 interface User {
   id: string;
@@ -64,6 +66,12 @@ function Router({
       <Route path="/history" component={() => (
         <div className="container mx-auto px-6 max-w-6xl py-16">
           <HealthHistory />
+        </div>
+      )} />
+
+      <Route path="/tips" component={() => (
+        <div className="container mx-auto px-6 max-w-6xl py-16">
+          <TipsSection />
         </div>
       )} />
       
@@ -174,6 +182,8 @@ function App() {
               onNavigate={handleNavigate}
             />
           </main>
+
+          <Footer />
         </div>
         <Toaster />
       </TooltipProvider>

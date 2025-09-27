@@ -109,8 +109,6 @@ function App() {
     email: "john.doe@example.com",
     avatar: ""
   });
-  
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const handleNavigate = (path: string) => {
     console.log(`Navigating to: ${path}`);
@@ -148,18 +146,6 @@ function App() {
     handleNavigate('/login');
   };
 
-  const handleToggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    console.log("Theme toggled:", !isDarkMode ? 'dark' : 'light');
-    
-    // Toggle dark class on document element
-    if (!isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  };
-
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -170,8 +156,6 @@ function App() {
               currentUser={currentUser}
               onNavigate={handleNavigate}
               onLogout={handleLogout}
-              isDarkMode={isDarkMode}
-              onToggleTheme={handleToggleTheme}
             />
           )}
           
@@ -181,9 +165,8 @@ function App() {
               currentUser={currentUser}
               onNavigate={handleNavigate}
             />
+            <Footer />
           </main>
-
-          <Footer />
         </div>
         <Toaster />
       </TooltipProvider>

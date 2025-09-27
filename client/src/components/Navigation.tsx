@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
@@ -43,23 +43,132 @@ interface NavigationProps {
   };
   onNavigate?: (href: string) => void;
   onLogout?: () => void;
-  isDarkMode?: boolean;
-  onToggleTheme?: () => void;
+  activeStateUrl?: string; // URL to fetch current active state from
 }
 
 export default function Navigation({ 
   currentUser,
   onNavigate,
   onLogout,
-  isDarkMode = false,
-  onToggleTheme
+  activeStateUrl
 }: NavigationProps) {
   const [activeItem, setActiveItem] = useState("/");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Initialize theme from stored preference or system preference
+  useEffect(() => {
+    const initializeTheme = () => {
+      // First check if there's a stored preference
+      const storedTheme = window.localStorage?.getItem('theme');
+      
+      if (storedTheme) {
+        const isDark = storedTheme === 'dark';
+        setIsDarkMode(isDark);
+        applyTheme(isDark);
+      } else {
+        // Fall back to system preference
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        setIsDarkMode(prefersDark);
+        applyTheme(prefersDark);
+      }
+    };
+
+    initializeTheme();
+
+    // Listen for system theme changes
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      // Only update if user hasn't set a manual preference
+      const storedTheme = window.localStorage?.getItem('theme');
+      if (!storedTheme) {
+        setIsDarkMode(e.matches);
+        applyTheme(e.matches);
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  // Apply theme to document
+  const applyTheme = (isDark: boolean) => {
+    const root = window.document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(isDark ? 'dark' : 'light');
+  };
+
+  // Toggle theme function
+  const handleToggleTheme = () => {
+    const newTheme = !isDarkMode;
+    setIsDarkMode(newTheme);
+    applyTheme(newTheme);
+    
+    // Persist preference
+    try {
+      window.localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+    } catch (error) {
+      console.warn('Failed to save theme preference:', error);
+    }
+  };
+
+  // Fetch active state from URL
+  useEffect(() => {
+    const fetchActiveState = async () => {
+      if (!activeStateUrl) return;
+      
+      try {
+        const response = await fetch(activeStateUrl);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        // Assuming the API returns { activeRoute: "/some-route" }
+        // Adjust this based on your actual API response format
+        if (data.activeRoute) {
+          setActiveItem(data.activeRoute);
+        }
+      } catch (error) {
+        console.error('Failed to fetch active navigation state:', error);
+        // Fallback to current location if available
+        if (typeof window !== 'undefined') {
+          setActiveItem(window.location.pathname);
+        }
+      }
+    };
+
+    fetchActiveState();
+  }, [activeStateUrl]);
+
+  // Update active state when URL changes (for SPA routing)
+  useEffect(() => {
+    const updateActiveStateFromUrl = () => {
+      if (typeof window !== 'undefined') {
+        const currentPath = window.location.pathname;
+        setActiveItem(currentPath);
+      }
+    };
+
+    // Listen for browser navigation changes
+    window.addEventListener('popstate', updateActiveStateFromUrl);
+    
+    // Initial check
+    updateActiveStateFromUrl();
+
+    return () => {
+      window.removeEventListener('popstate', updateActiveStateFromUrl);
+    };
+  }, []);
 
   const handleNavigation = (href: string) => {
     setActiveItem(href);
     console.log(`Navigating to: ${href}`);
     onNavigate?.(href);
+
+    // Update browser URL if needed
+    if (typeof window !== 'undefined') {
+      window.history.pushState(null, '', href);
+    }
   };
 
   const NavItems = ({ mobile = false }: { mobile?: boolean }) => (
@@ -110,7 +219,7 @@ export default function Navigation({
             <Button
               variant="ghost"
               size="icon"
-              onClick={onToggleTheme}
+              onClick={handleToggleTheme}
               data-testid="button-theme-toggle"
             >
               {isDarkMode ? (

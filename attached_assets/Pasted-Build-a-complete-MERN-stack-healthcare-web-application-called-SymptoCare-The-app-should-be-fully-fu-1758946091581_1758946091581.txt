@@ -1,0 +1,133 @@
+Build a complete MERN stack healthcare web application called SymptoCare.
+The app should be fully functional, responsive, and visually stunning with modern UI using React + Tailwind CSS. Use MongoDB + Mongoose for the database and Node.js + Express for the backend.
+
+🔹 Pages & Sections:
+1. Home / Dashboard
+
+Hero section with background gradient, welcome message, and call-to-action buttons.
+
+Quick stats: Total symptom logs, upcoming appointments, recent suggestions.
+
+Featured section: “Health Tips” with 3–5 cards containing wellness tips or preventive advice.
+
+2. User Authentication
+
+Signup/Login page with email/password.
+
+Password validation and user session handling.
+
+Optional: social login (Google, etc.) if time permits.
+
+3. Symptom Logging
+
+Form for users to input multiple symptoms.
+
+Support multi-select checkboxes and free-text input.
+
+Submit triggers a rule-based reasoning system or optional AI API to generate next-step suggestions.
+
+Display suggestions in cards with actionable advice.
+
+4. History / Timeline
+
+Display all past symptom logs per user in timeline or card format.
+
+Each log shows: symptoms, suggestions, date, and optionally a “re-run AI suggestion” button.
+
+5. Doctor Appointments
+
+Form to book doctor appointments: Doctor Name, Specialty, Date, Time.
+
+List of appointments in cards, with upcoming appointments highlighted.
+
+Ability to cancel or reschedule.
+
+6. Health Articles / Tips
+
+Section or page with searchable and filterable health articles.
+
+Cards display Title, Short Description, and Read More (modal).
+
+Optional AI integration to generate dynamic wellness tips.
+
+7. Emergency Contacts
+
+Quick-access buttons for nearest hospitals, ambulance, or doctors.
+
+Include clickable phone links.
+
+Display in a responsive card layout with icons.
+
+8. Profile / Settings
+
+User info update: Name, Email, Age, Blood Group.
+
+Show statistics: number of symptom logs, appointments, recent suggestions.
+
+Optional: dark/light mode toggle.
+
+9. Notifications / Alerts
+
+Display upcoming medicine or appointment alerts with badges or popups.
+
+Optional: AI-powered suggestions for urgent attention if severe symptoms are logged.
+
+🔹 Backend Requirements
+
+Express Routes:
+
+POST /api/signup → create user
+
+POST /api/login → authenticate user
+
+POST /api/symptoms → save symptom log + generate suggestion
+
+GET /api/symptoms → fetch user logs
+
+POST /api/appointments → book appointment
+
+GET /api/appointments → fetch appointments
+
+GET /api/articles → fetch health tips
+
+GET /api/contacts → fetch emergency contacts
+
+Database (MongoDB + Mongoose):
+
+users: { name, email, password, age, bloodGroup }
+
+symptoms: { userId, symptoms[], suggestion, date }
+
+appointments: { userId, doctor, specialty, date, time }
+
+articles: { title, description, content }
+
+contacts: { name, type, phone, location }
+
+🔹 Frontend Requirements
+
+React + Tailwind CSS
+
+Modular components for cards, forms, tables, buttons, modals, alerts.
+
+Responsive design for desktop and mobile.
+
+Smooth animations on hover and page transitions.
+
+Dashboard with charts or summaries using a lightweight chart library if possible.
+
+AI Integration: Optional call to GPT or similar to generate dynamic suggestions or tips.
+
+State Management: Use React Context or Redux for global state (user, logs, appointments).
+
+🔹 Additional Features
+
+Pre-fill example data for symptom logs, appointments, articles, and contacts.
+
+Fully functional CRUD for symptoms and appointments.
+
+Modular folder structure (client, server, components, routes, models).
+
+Use cards, gradient backgrounds, hover effects, and subtle animations for an eye-catching UI.
+
+Deliver a complete, demo-ready, hackathon-friendly prototype.
